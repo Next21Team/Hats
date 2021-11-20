@@ -1,0 +1,29 @@
+[en]
+HAT_ONLY_VIP = This hat is available only for VIP players
+HAT_SET = You put on a hat
+HAT_REMOVE = You took off the hat
+HAT_NICK_NOT_FOUND = Player with this name is not found
+HAT_ALL_REMOVED = Removed hats from everyone Hats removed from all players
+HAT_ITEM_REMOVE = Remove the hat
+HAT_POSTFIX_SKIN = select skin
+HAT_POSTFIX_MODEL = select model
+HAT_POSTFIX_TEAM_MODEL = team model
+HAT_POSTFIX_TEAM_COLOR = team color
+HAT_ITEM_NEXT = Next
+HAT_ITEM_PREV = Prev
+HAT_ITEM_EXIT = Exit
+
+[ru]
+HAT_ONLY_VIP = Эта шапка доступна только для VIP игроков
+HAT_SET = Вы надели шапку
+HAT_REMOVE = Вы сняли шапку
+HAT_NICK_NOT_FOUND = Игрок с таким именем не найден
+HAT_ALL_REMOVED = Шапки удалены со всех игроков
+HAT_ITEM_REMOVE = Снять шапку
+HAT_POSTFIX_SKIN = выбрать скин
+HAT_POSTFIX_MODEL = выбрать модель
+HAT_POSTFIX_TEAM_MODEL = модель команды
+HAT_POSTFIX_TEAM_COLOR = цвет команды
+HAT_ITEM_NEXT = Вперед
+HAT_ITEM_PREV = Назад
+HAT_ITEM_EXIT = Выход
