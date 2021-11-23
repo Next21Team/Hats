@@ -1,0 +1,67 @@
+{
+	"Santa": {
+		"model": "santa_hat_v2.mdl",
+		"tag": "s",
+		"items": [
+			"Red Santa",
+			"Blue Santa",
+			"Magenta Santa",
+			"Cyan Santa"
+		]
+	},
+	"Scarf": {
+		"model": "scarf.mdl",
+		"tag": "t"
+	},
+	"Pony": {
+		"model": "pony_v2.mdl",
+		"tag": "c",
+		"items": [
+			"Rainbow Dash",
+			"Applejack",
+			"Fluttershy",
+			"Pinkie Pie",
+			"Rarity",
+			"Twilight Sparkle"
+		]
+	},
+	"Pony Antagonist": {
+		"model": "pony_antagonist.mdl",
+		"tag": "c",
+		"vip": true
+	},
+	"Minecraft": {
+		"model": "pony_antagonist.mdl",
+		"tag": "s"
+	},
+	"Beavis and Butt-Head": {
+		"model": "Beavis-Butt-Head.mdl",
+		"tag": "s",
+		"items": [
+			"Beavis",
+			"Butt-Head"
+		]
+	},
+	"Headcrab": {
+		"model": "Headcrab.mdl"
+	},
+	"Halloween Koshak": {
+		"model": "halloween_koshak_pack.mdl",
+		"tag": "b"
+	},
+	"Dragon Nest Pack": {
+		"model": "hats_dn.mdl",
+		"tag": "b"
+	},
+	"Halloween 2017": {
+		"model": "halloween2017.mdl",
+		"tag": "b"
+	},
+	"Halloween 2016": {
+		"model": "halloween2016.mdl",
+		"tag": "b"
+	},	
+	"Captain BaseBallBat-Boy": {
+		"model": "CaptainBaseBallBat-Boy.mdl"
+	}
+}
