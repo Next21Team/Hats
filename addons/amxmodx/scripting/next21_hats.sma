@@ -60,7 +60,7 @@ public plugin_precache()
     #endif
 
     load_hats(szHatFile)
-    
+
     for (new i = 1, szCurrentFile[256]; i < g_iTotalHats; i++)
     {
         formatex(szCurrentFile, charsmax(szCurrentFile), "%s/%s", HATS_PATH, g_eHatData[i][HAT_MODEL])
@@ -72,26 +72,26 @@ public plugin_precache()
 public plugin_cfg()
 {
     g_iVaultHats = nvault_open("next21_hat")
-            
+
     if (g_iVaultHats == INVALID_HANDLE)
         set_fail_state("Error opening nVault!")
-        
+
     nvault_prune(g_iVaultHats, 0, get_systime() - (SECONDS_IN_DAY * VAULT_DAYS))
 }
 
 public plugin_init()
 {
     register_plugin(PLUGIN, VERSION, AUTHOR)
-        
+
     register_concmd("amx_givehat", "concmd_give_hat", ADMIN_RCON, "<nick> <hat #> <part #>")
     register_concmd("amx_removehats", "concmd_remove_all_hats", ADMIN_RCON, " - Removes hats from everyone")
-        
+
     register_clcmd("say /hats", "clcmd_show_menu", .info="Shows hats menu")
     register_clcmd("say_team /hats", "clcmd_show_menu", .info="Shows hats menu")
     register_clcmd("hats", "clcmd_show_menu", .info="Shows hats menu")
 
     register_dictionary("next21_hats.txt")
-    
+
     g_fwChangeHat = CreateMultiForward("n21_change_hat", ET_STOP, FP_CELL, FP_CELL)
 }
 
@@ -118,7 +118,7 @@ public client_putinserver(iPlayer)
 
     if (equal(szHatModel, "!NULL"))
         goto set_hat_and_return
-    
+
     for (new i = 1; i < g_iTotalHats; i++)
     {
         if (!equal(szHatModel, g_eHatData[i][HAT_MODEL]))
@@ -155,10 +155,10 @@ public CBasePlayer_Spawn_Post(const iPlayer)
 
     if (g_eHatData[iHatId][HAT_BODIES_NUM] > 1)
         set_entvar(iHatEnt, var_body, iPartId)
-    
+
     if (g_eHatData[iHatId][HAT_SKINS_NUM] > 1)
         set_entvar(iHatEnt, var_skin, iPartId)
-        
+
     return HC_CONTINUE
 }
 
@@ -177,18 +177,18 @@ public concmd_give_hat(iPlayer, iLevel, cid)
     read_argv(1, szPlayerName, charsmax(szPlayerName))
     read_argv(2, szHatId, charsmax(szHatId))
     read_argv(3, szPartId, charsmax(szPartId))
-    
+
     new iTarget = find_player_ex(FindPlayer_MatchName, szPlayerName)
     if (!iTarget)
     {
         client_print(iPlayer, print_console, "[%s] %L", PLUGIN, iPlayer, "HAT_NICK_NOT_FOUND")
         return PLUGIN_HANDLED
     }
-    
+
     new iHatId = str_to_num(szHatId)
     if (iHatId >= g_iTotalHats)
         return PLUGIN_HANDLED
-            
+
     set_hat(iTarget, iHatId, iPlayer, str_to_num(szPartId))
     return PLUGIN_HANDLED
 }
@@ -202,7 +202,7 @@ public concmd_remove_all_hats(iPlayer, iLevel, cid)
     for (new i = 1; i <= iMaxPlayers; i++)
         if (is_user_connected(i))
             remove_hat(i)
-    
+
     client_print(iPlayer, print_console, "[%s] %L", PLUGIN, iPlayer, "HAT_ALL_REMOVED")
     return PLUGIN_HANDLED
 }
@@ -234,7 +234,7 @@ display_hats_menu(iPlayer, iPage=0)
         menu_additem(iMenu, szItemName)
     }
     set_menu_common_prop(iMenu, iPlayer)
-    
+
     menu_display(iPlayer, iMenu, iPage)
 }
 
@@ -247,7 +247,7 @@ display_skins_menu(iPlayer)
     for (new i; i < iSkinsNum; i++)
         menu_additem(iMenu, g_eHatData[iHatId][HAT_PARTS_NAMES][i * NAME_LEN])
     set_menu_common_prop(iMenu, iPlayer)
-    
+
     menu_display(iPlayer, iMenu)
 }
 
@@ -260,7 +260,7 @@ display_bodies_menu(iPlayer)
     for (new i; i < iBodiesNum; i++)
         menu_additem(iMenu, g_eHatData[iHatId][HAT_PARTS_NAMES][i * NAME_LEN])
     set_menu_common_prop(iMenu, iPlayer)
-    
+
     menu_display(iPlayer, iMenu)
 }
 
@@ -344,13 +344,13 @@ set_hat(iPlayer, iHatId, iSender, iPartId=0)
 {
     static szKey[24]
     new iFwdReturn = PLUGIN_CONTINUE
-    
+
     if (!check_hat_access(iPlayer, iHatId))
     {
         client_print_color(iSender, print_team_red, "^4[%s] ^3%L", PLUGIN, iSender, "HAT_ONLY_VIP")
         return NULLENT
     }
-    
+
     if (iHatId == 0)
     {
         remove_hat(iPlayer)
@@ -364,24 +364,24 @@ set_hat(iPlayer, iHatId, iSender, iPartId=0)
     }
 
     new iHatEnt = g_ePlayerData[iPlayer][PLR_HAT_ENT]
-    
+
     if (is_nullent(iHatEnt))
     {
         iHatEnt = rg_create_entity("info_target", true)
         if (is_nullent(iHatEnt))
             return NULLENT
-                                            
+
         set_entvar(iHatEnt, var_movetype, MOVETYPE_FOLLOW)
         set_entvar(iHatEnt, var_aiment, iPlayer)
         set_entvar(iHatEnt, var_rendermode, kRenderNormal)
         set_entvar(iHatEnt, var_renderamt, 0.0)
     }
 
-    ExecuteForward(g_fwChangeHat, iFwdReturn, iPlayer, iHatEnt)	
+    ExecuteForward(g_fwChangeHat, iFwdReturn, iPlayer, iHatEnt)
     g_ePlayerData[iPlayer][PLR_HAT_ID] = iHatId
-        
+
     engfunc(EngFunc_SetModel, iHatEnt, fmt("%s/%s", HATS_PATH, g_eHatData[iHatId][HAT_MODEL]))
-    
+
     new iSkin, iBody
     new cTag = g_eHatData[iHatId][HAT_TAG]
 
@@ -395,7 +395,7 @@ set_hat(iPlayer, iHatId, iSender, iPartId=0)
             iBody = iPartId < g_eHatData[iHatId][HAT_BODIES_NUM] ? iPartId : 0
         }
     }
-    
+
     switch (cTag)
     {
         case 's': client_print_color(iSender, print_team_red, CHAT_SET_HAT_FORMAT,
@@ -410,11 +410,11 @@ set_hat(iPlayer, iHatId, iSender, iPartId=0)
 
     set_entvar(iHatEnt, var_skin, iSkin)
     set_entvar(iHatEnt, var_body, iBody)
-    
+
     set_entvar(iHatEnt, var_sequence, iBody)
     set_entvar(iHatEnt, var_framerate, 1.0)
     set_entvar(iHatEnt, var_animtime, get_gametime())
-                                
+
     get_user_authid(iPlayer, szKey, charsmax(szKey))
     nvault_set(g_iVaultHats, szKey, fmt("%s|%i", g_eHatData[iHatId][HAT_MODEL], iPartId))
 
@@ -428,9 +428,9 @@ load_hats(const szHatFile[])
     g_iTotalHats = 1
 
     #if defined USE_JSON
-    new bool: bRes = load_hats_from_json(szHatFile)
+    new bool:bRes = load_hats_from_json(szHatFile)
     #else
-    new bool: bRes = load_hats_from_ini(szHatFile)
+    new bool:bRes = load_hats_from_ini(szHatFile)
     #endif
 
     if (bRes)
@@ -440,16 +440,16 @@ load_hats(const szHatFile[])
 }
 
 #if defined USE_JSON
-bool: load_hats_from_json(const szHatFile[])
+bool:load_hats_from_json(const szHatFile[])
 {
-    new JSON: jsonRoot = json_parse(szHatFile, true)
+    new JSON:jsonRoot = json_parse(szHatFile, true)
     if (jsonRoot == Invalid_JSON)
         return false
 
     new szCurrentFile[256], szHatModel[NAME_LEN], iVipFlag, szTag[2], cTag
 
     new iHatsNum = json_object_get_count(jsonRoot)
-    for (new i, JSON: jsonHat, JSON: jsonHatItems; i < iHatsNum; i++)
+    for (new i, JSON:jsonHat, JSON:jsonHatItems; i < iHatsNum; i++)
     {
         jsonHat = json_object_get_value_at(jsonRoot, i)
         json_object_get_string(jsonHat, "model", szHatModel, charsmax(szHatModel))
@@ -468,13 +468,13 @@ bool: load_hats_from_json(const szHatFile[])
         cTag = szTag[0]
 
         new iSkinsNum = 1, iBodiesNum = 1
-        if (cTag == 's' || cTag == 'b' || cTag == 'c' || cTag == 't')					
+        if (cTag == 's' || cTag == 'b' || cTag == 'c' || cTag == 't')
             parse_submodel_names(szCurrentFile, g_iTotalHats, iSkinsNum, iBodiesNum)
 
         validate_hat_tag(cTag, iSkinsNum, iBodiesNum)
         if (cTag == 's')
             set_hat_default_skin_names(g_iTotalHats, iSkinsNum)
-        
+
         new iPartsNum = max(iSkinsNum, iBodiesNum)
         jsonHatItems = json_object_get_value(jsonHat, "items")
         if (jsonHatItems != Invalid_JSON)
@@ -495,8 +495,8 @@ bool: load_hats_from_json(const szHatFile[])
         g_eHatData[g_iTotalHats][HAT_VIP_FLAG] = iVipFlag
         g_eHatData[g_iTotalHats][HAT_SKINS_NUM] = iSkinsNum
         g_eHatData[g_iTotalHats][HAT_BODIES_NUM] = iBodiesNum
-            
-        static bool: bWasSpawnReg
+
+        static bool:bWasSpawnReg
         if (!bWasSpawnReg && szTag[0] == 't')
         {
             RegisterHookChain(RG_CBasePlayer_Spawn, "CBasePlayer_Spawn_Post", true)
@@ -514,7 +514,7 @@ bool: load_hats_from_json(const szHatFile[])
     return true
 }
 #else
-bool: load_hats_from_ini(const szHatFile[])
+bool:load_hats_from_ini(const szHatFile[])
 {
     if (!file_exists(szHatFile))
         return false
@@ -528,7 +528,7 @@ bool: load_hats_from_ini(const szHatFile[])
         fgets(iFile, szLineData, charsmax(szLineData))
         if (szLineData[0] == ';' || strlen(szLineData) < 7)
             continue
-            
+
         parse(szLineData, szHatModel, charsmax(szHatModel), szHatName, charsmax(szHatName))
         formatex(szCurrentFile, charsmax(szCurrentFile), "%s/%s", HATS_PATH, szHatModel)
 
@@ -537,7 +537,7 @@ bool: load_hats_from_ini(const szHatFile[])
             server_print("[%s] Failed to precache %s", PLUGIN, szCurrentFile)
             continue
         }
-            
+
         if (szHatName[0] == 'v')
         {
             iVipFlag = 1
@@ -552,9 +552,9 @@ bool: load_hats_from_ini(const szHatFile[])
         }
 
         new iSkinsNum = 1, iBodiesNum = 1
-        if (cTag == 's' || cTag == 'b' || cTag == 'c' || cTag == 't')					
+        if (cTag == 's' || cTag == 'b' || cTag == 'c' || cTag == 't')
             parse_submodel_names(szCurrentFile, g_iTotalHats, iSkinsNum, iBodiesNum)
-        
+
         validate_hat_tag(cTag, iSkinsNum, iBodiesNum)
         if (cTag == 's')
             set_hat_default_skin_names(g_iTotalHats, iSkinsNum)
@@ -567,14 +567,14 @@ bool: load_hats_from_ini(const szHatFile[])
         g_eHatData[g_iTotalHats][HAT_VIP_FLAG] = iVipFlag
         g_eHatData[g_iTotalHats][HAT_SKINS_NUM] = iSkinsNum
         g_eHatData[g_iTotalHats][HAT_BODIES_NUM] = iBodiesNum
-            
-        static bool: bWasSpawnReg
+
+        static bool:bWasSpawnReg
         if (!bWasSpawnReg && cTag == 't')
         {
             RegisterHookChain(RG_CBasePlayer_Spawn, "CBasePlayer_Spawn_Post", true)
             bWasSpawnReg = true
         }
-                
+
         if (++g_iTotalHats == MAX_HATS)
         {
             server_print("[%s] Reached hat limit", PLUGIN)
@@ -590,16 +590,16 @@ bool: load_hats_from_ini(const szHatFile[])
 
 parse_submodel_names(const szModelPath[], iHatId, &iSkinsNum, &iBodiesNum)
 {
-    new studiomodel = fopen(szModelPath, "rb"),			
+    new studiomodel = fopen(szModelPath, "rb"),
         bodypartindex, numbodyparts, nummodels
-                                            
+
     fseek(studiomodel, 196, SEEK_SET)
     fread(studiomodel, iSkinsNum, BLOCK_INT)
 
     fseek(studiomodel, 204, SEEK_SET)
     fread(studiomodel, numbodyparts, BLOCK_INT)
     fread(studiomodel, bodypartindex, BLOCK_INT)
-                        
+
     fseek(studiomodel, bodypartindex, SEEK_SET)
     for (new i = 0, j; i < numbodyparts; i++)
     {
@@ -607,12 +607,12 @@ parse_submodel_names(const szModelPath[], iHatId, &iSkinsNum, &iBodiesNum)
         fread(studiomodel, nummodels, BLOCK_INT)
         fseek(studiomodel, 4, SEEK_CUR)
         new modelindex; fread(studiomodel, modelindex, BLOCK_INT)
-                                        
+
         if (nummodels > iBodiesNum)
         {
             iBodiesNum = nummodels
-                    
-            new nextpos = ftell(studiomodel)	
+
+            new nextpos = ftell(studiomodel)
             fseek(studiomodel, modelindex, SEEK_SET)
             for (j = 0; j < nummodels; j++)
             {
@@ -647,7 +647,7 @@ validate_hat_tag(&cTag, iSkinsNum, iBodiesNum)
     }
 }
 
-bool: check_hat_access(iPlayer, iHatId)
+bool:check_hat_access(iPlayer, iHatId)
 {
     return !g_eHatData[iHatId][HAT_VIP_FLAG] || (get_user_flags(iPlayer) & VIP_FLAG)
 }
