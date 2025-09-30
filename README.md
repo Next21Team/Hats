@@ -25,7 +25,8 @@ In addition to the hat name, the markup contains the following fields:
 * model: *string* model file name;
 * tag: *character* tag (you can leave it blank if you don't want to use skins/submodels);
 * vip: *true|false* access for VIP players only (optional field);
-* items: *array of strings* names of skins/submodels in the menu (optional field).
+* items: *array of strings* names of skins/submodels in the menu (optional field);
+* initial: *true|false* give this hat to new players (optional field).
 
 Example:
 ```json
@@ -38,7 +39,8 @@ Example:
             "Blue Santa",
             "Magenta Santa",
             "Cyan Santa"
-        ]
+        ],
+        "initial": true
     },
     "Dragon Nest Pack": {
         "model": "hats_dn.mdl",

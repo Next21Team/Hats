@@ -13,7 +13,7 @@
 
 new const PLUGIN[] = 	"Hats"
 new const AUTHOR[] = 	"Psycrow"
-new const VERSION[] = 	"1.7"
+new const VERSION[] = 	"1.8"
 
 new const HATS_PATH[] =	"models/next21_hats"
 #define MAX_HATS 		64
@@ -46,6 +46,7 @@ enum _:HAT_DATA
 }
 
 new g_ePlayerData[MAX_PLAYERS + 1][PLAYER_DATA], g_eHatData[MAX_HATS][HAT_DATA],
+    Array:g_aInitialHats,
     g_iTotalHats, g_fwChangeHat, g_iVaultHats
 
 new bool:g_pCvarMenuEnabled
@@ -75,6 +76,7 @@ public plugin_precache()
     formatex(szHatFile, charsmax(szHatFile), "%s/hats.ini", szCfgDir)
     #endif
 
+    g_aInitialHats = ArrayCreate()
     load_hats(szHatFile)
 
     for (new i, szCurrentFile[256]; i < g_iTotalHats; i++)
@@ -129,7 +131,16 @@ public client_putinserver(iPlayer)
 
     new iHatId = -1, iPartId
     if (!szValue[0])
+    {
+        new iInitialHatsNum = ArraySize(g_aInitialHats)
+        if (iInitialHatsNum > 0)
+        {
+            iHatId = ArrayGetCell(g_aInitialHats, random(iInitialHatsNum))
+            iPartId = random(get_hat_parts_num(iHatId))
+        }
+
         goto set_hat_and_return
+    }
 
     static szHatModel[120], szHatPart[5]
     split(szValue, szHatModel, charsmax(szHatModel), szHatPart, charsmax(szHatPart), "|")
@@ -488,6 +499,7 @@ set_hat(iPlayer, iHatId, iSender=0, iPartId=0, bool:bSaveData=false)
 load_hats(const szHatFile[])
 {
     g_iTotalHats = 0
+    ArrayClear(g_aInitialHats)
 
     #if defined USE_JSON
     new bool:bRes = load_hats_from_json(szHatFile)
@@ -559,6 +571,9 @@ bool:load_hats_from_json(const szHatFile[])
         g_eHatData[g_iTotalHats][HAT_VIP_FLAG] = bVipFlag
         g_eHatData[g_iTotalHats][HAT_SKINS_NUM] = iSkinsNum
         g_eHatData[g_iTotalHats][HAT_BODIES_NUM] = iBodiesNum
+
+        if (bInitialFlag)
+            ArrayPushCell(g_aInitialHats, g_iTotalHats)
 
         static bool:bWasSpawnReg
         if (!bWasSpawnReg && szTag[0] == 't')

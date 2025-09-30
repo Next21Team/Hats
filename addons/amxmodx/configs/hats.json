@@ -7,7 +7,8 @@
 			"Blue Santa",
 			"Magenta Santa",
 			"Cyan Santa"
-		]
+		],
+		"initial": true
 	},
 	"Scarf": {
 		"model": "scarf.mdl",
@@ -60,7 +61,7 @@
 	"Halloween 2016": {
 		"model": "halloween2016.mdl",
 		"tag": "b"
-	},	
+	},
 	"Captain BaseBallBat-Boy": {
 		"model": "CaptainBaseBallBat-Boy.mdl"
 	}
