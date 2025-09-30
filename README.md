@@ -17,6 +17,9 @@ The plugin allows the player to wear hats on their heads. The main feature of th
 ## Configuration
 The plugin provides two ways to edit the list of hats: using files `amxmodx/configs/hats.json` and `amxmodx/configs/hats.ini`. The JSON method is more structured and allows for naming of hat's submodels and skins (otherwise the names will be retrieved from the model file), but less compact. The default is the first method. To switch to .ini format, you need to delete or comment out the line `#define USE_JSON`. The plugin automatically detects the number of skins and submodels, so there is no need to set them manually.
 
+### Cvars
+- ```hat_menu_enabled "1"``` Enable hat selection menu.
+
 ### Configuration via hats.json
 In addition to the hat name, the markup contains the following fields:
 * model: *string* model file name;
@@ -73,6 +76,9 @@ Example:
 * _b_ — only submodels will be read;
 * _c_ — a universal type that does not exclude the possibility of having skins and submodels in the hat at the same time (use it if you are in doubt about choosing a tag or want to combine skins and submodels);
 * _t_ — skin or submodel will be set according to the player's team.
+
+## API
+[API](addons/amxmodx/scripting/include/hats.inc)
 
 ## Requirements
 - [Reapi](https://github.com/s1lentq/reapi)

@@ -1,5 +1,5 @@
 [en]
-HAT_ONLY_VIP = This hat is available only for VIP players
+HAT_ONLY_VIP = This hat is available only to VIP players
 HAT_SET = You put on a hat
 HAT_REMOVE = You took off the hat
 HAT_NICK_NOT_FOUND = Player with this name is not found
@@ -14,7 +14,7 @@ HAT_ITEM_PREV = Prev
 HAT_ITEM_EXIT = Exit
 
 [ru]
-HAT_ONLY_VIP = Эта шапка доступна только для VIP игроков
+HAT_ONLY_VIP = Эта шапка доступна только VIP игрокам
 HAT_SET = Вы надели шапку
 HAT_REMOVE = Вы сняли шапку
 HAT_NICK_NOT_FOUND = Игрок с таким именем не найден
